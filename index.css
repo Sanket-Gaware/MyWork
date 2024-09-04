@@ -1,0 +1,138 @@
+.Main,.pcard-body{
+    background-color:#e7e2e705;
+}
+.Main{
+    margin: 50px;
+}
+.CartImg{
+    width: 40%;
+    display: flex;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+div .card{
+    border-radius: 10px;
+}
+.pcard{
+    background-color: #f6f2f88c;
+}
+.pimg:hover{
+    border: 3px solid rgb(209, 23, 23);
+}
+.pcard-body{
+    background-color: #f6f2f88c;
+}
+.pimg{
+    width: 100%;
+    border-radius: 10px;
+    
+}
+/* .pname{
+
+} */
+.pcat{
+    font-size: small;
+    margin-bottom: 0px;
+    color:  rgb(122, 39, 39);
+}
+.pprice{
+    color: rgb(175, 54, 5);
+}
+
+.empty-cart-txt{
+    color: rgb(134, 64, 64);
+    font-weight: 550;
+}
+.your-cart{
+    color: rgb(175, 54, 5);
+    font-weight: 800;
+    letter-spacing: 1.3px;
+}
+.add-to-cart {
+    background-color:white; 
+    border:1px solid  rgba(78, 24, 3, 0.644);
+    padding: 9px;
+    font-weight: bold;
+    position: absolute;
+    bottom: 95px;
+    left: 40px;
+    width: 65%;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    border-radius: 50px; 
+    font-size: 14px;
+  }
+  .add-to-cart:hover,.pimg:hover{
+    border: 3px solid rgb(209, 23, 23);
+  }
+  
+
+  .remove{
+    display:flex;
+    align-items:flex-end;
+    margin-left: 150px;
+  }
+  .inc{
+    background-color: rgb(209, 23, 23);
+  }
+  .inc1{
+    margin-right: 40px;
+  }
+  .dec1{
+    margin-left: 40px;
+  }
+  .carbon-neutral{
+    background-color: #f6f2f88c;
+  }
+
+.cbtn{
+  width: 90%;
+  justify-content: center;
+  border-radius: 100px;
+  color: white;
+  border-color: rgb(209, 23, 23);
+  border: 0px;
+  background-color:  rgb(209, 23, 23);
+}
+order-txt{
+  font-size: small !important;
+}
+.mtitle{
+  font-weight: 900;
+  font-size: larger;
+}
+.thumbnail{
+  width: 12%;
+  height: 90%;
+  border-radius: 5px;
+}
+.mbody{
+  background-color: #e7e2e705 !important;
+}
+.ok{
+  font-weight: 1000;
+}
+
+/* ------------------reposnsve--------------------- */
+@media screen and (max-width: 600px){
+.Main{
+    margin: 30px;
+}
+.add-to-cart {
+  left: 50px;
+  padding: 15px;
+}
+.carbon-neutral{
+font-size:small ;
+}
+.thumbnail{
+  width: 20%;
+}
+.remove{
+  
+  margin-left: 90px;
+}
+}

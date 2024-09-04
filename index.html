@@ -1,0 +1,416 @@
+<html>
+    <head>
+        <title>Week Task 1</title>
+            <link rel="stylesheet" href="index.css"/>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="background-color:#e7e2e733;">
+        <div class="Main">
+            <div class="row">
+                <div class="col-md-8 col-xs-12">
+                    <div class="row">
+                        <h1 class="MainHeading fw-bold mb-3">Desserts</h1>
+                    </div>
+                    <div id="productRow" class="row">
+                    </div>
+                </div>
+                <div class="col-md-4 col-xs-12">
+                    <div class="card border-0 d-flex">
+                        
+                        <div class="card-body">
+                            <h3 class='card-title your-cart'>Your Cart (<span id="pcnt"></span>)</h3> 
+                            <div class="cbody" id="cart-card-body">
+                                <img class='CartImg' src="assets/images/illustration-empty-cart.svg">
+                                <p class="d-flex justify-content-center empty-cart-txt">Your added items will appear here</p>
+                            </div> 
+                            <div id="confirm-btn">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+        var data=[];
+        var data1=[
+            {
+                'id':1,
+                'count':1,
+                'amount':0,
+            },
+            {
+                'id':2,
+                'count':1,
+                'amount':0,
+            },
+            {
+                'id':3,
+                'count':1,
+                'amount':0,
+            },
+            {
+                'id':4,
+                'count':1,
+                'amount':0,
+            },
+            {
+                'id':5,
+                'count':1,
+                'amount':0,
+            },
+            {
+                'id':6,
+                'count':1,
+                'amount':0,
+            },
+            {
+                'id':7,
+                'count':1,
+                'amount':0,
+            },
+            {
+                'id':8,
+                'count':1,
+                'amount':0,
+            },
+            {
+                'id':9,
+                'count':1,
+                'amount':0,
+            },   
+        ];
+
+        fetch('data.json')
+        .then(response => response.json())
+        .then(json =>{
+            data = json;
+            setProducts();
+        })
+
+        var ProductRow = document.querySelector('#ProductRow');
+        var cbody = document.querySelector('#cart-card-body');
+        var confirm_btn = document.querySelector('#confirm-btn');
+        var pcnt = 0;
+        document.getElementById('pcnt').textContent = pcnt;
+
+        const setProducts =()=>{
+
+            data.map((product)=>{
+                ProductRow.innerHTML+=`
+                <div class="col-md-4 col-xs-12">
+                    <div class="card pcard border-0">
+                        <img class='pimg' id='pimg${product.id}' src="${product.image.desktop}">
+                        <div id='id${product.id}'>
+                            <button onclick='AddtoCart(${product.id})' class="add-to-cart">
+                                    <span class="cart-icon"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" fill="none" viewBox="0 0 21 20"><g fill="#C73B0F" clip-path="url(#a)"><path d="M6.583 18.75a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5ZM15.334 18.75a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5ZM3.446 1.752a.625.625 0 0 0-.613-.502h-2.5V2.5h1.988l2.4 11.998a.625.625 0 0 0 .612.502h11.25v-1.25H5.847l-.5-2.5h11.238a.625.625 0 0 0 .61-.49l1.417-6.385h-1.28L16.083 10H5.096l-1.65-8.248Z"/><path d="M11.584 3.75v-2.5h-1.25v2.5h-2.5V5h2.5v2.5h1.25V5h2.5V3.75h-2.5Z"/></g><defs><clipPath id="a"><path fill="#fff" d="M.333 0h20v20h-20z"/></clipPath></defs></svg></span>&nbsp Add to Cart
+                            </button>
+                        </div>
+                        <div class="card-body pcard-body">
+                            <p class='mt-2'></p>
+                            <h6 class='card-title mb-1 pcat '>${product.category}</h6>
+                            <p class='card-text fw-bold mb-0 pname'>${product.name}</p>
+                            <p class='card-text fw-bold pprice'> &dollar;${intToFloat(product.price,2)}</p>
+                        </div>
+                    </div>
+                </div>
+                `
+            })
+        }
+
+        function intToFloat(num, decPlaces) { return num.toFixed(decPlaces); }
+
+        var myCart=[];
+        var total=0;
+        var t;
+        var mt,spc;
+
+        function AddtoCart(id){
+            cnt=0;
+            if(pcnt === 0)
+                {
+                    cbody.innerHTML='';
+                }
+                var cart1 = data.filter((product)=> product.id === id);
+                myCart = myCart.concat(cart1);
+                // pcnt++;
+                document.getElementById('pcnt').textContent=pcnt+1;
+
+                Count(id);
+                cart1.map((cart)=>{
+                    var count = data1[cart.id-1].count;
+                cbody.innerHTML+=`
+                    <div class='p-2'>
+                        <p class='fw-bold'>${cart.category}</p>
+                        <div class='d-flex'>
+                            <p id='c${cart.id}' class='fw-bold'>${cnt}x</p>
+                            <p class='me-3 ms-3'>@$${intToFloat(cart.price,2)}</p>
+                            <p id='xx${cart.id}' class=''> $${intToFloat(cart.price*count,2)}</p>
+                            <p class='remove pb-2'><svg type='button' onclick='RemoveCart(${cart.id},${cart.price})' xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="none" viewBox="0 0 10 10"><path fill="#CAAFA7" d="M8.375 9.375 5 6 1.625 9.375l-1-1L4 5 .625 1.625l1-1L5 4 8.375.625l1 1L6 5l3.375 3.375-1 1Z"/></svg></p>
+                        </div>
+                        <hr/>
+                    </div>
+                    
+                `  
+                c = 'c'+cart.id;
+                xprice = 'xx'+cart.id;
+                t = 'total'+cart.id;
+                if(pcnt !== 0)
+                {
+                    confirm_btn.innerHTML=`
+                                <div class='d-flex'>
+                                    <p class='m-1'>Order Total</p>
+                                    <p id='total${cart.id}' class='ms-auto me-1 fw-bold fs-4 total'>$${total} </p>
+                                </div>
+                                <div class='card m-1 border-0 rounded-1-circle'>
+                                    <p class='p-3 mb-0  d-flex justify-content-center carbon-neutral'><svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" fill="none" viewBox="0 0 21 20"><path fill="#1EA575" d="M8 18.75H6.125V17.5H8V9.729L5.803 8.41l.644-1.072 2.196 1.318a1.256 1.256 0 0 1 .607 1.072V17.5A1.25 1.25 0 0 1 8 18.75Z"/><path fill="#1EA575" d="M14.25 18.75h-1.875a1.25 1.25 0 0 1-1.25-1.25v-6.875h3.75a2.498 2.498 0 0 0 2.488-2.747 2.594 2.594 0 0 0-2.622-2.253h-.99l-.11-.487C13.283 3.56 11.769 2.5 9.875 2.5a3.762 3.762 0 0 0-3.4 2.179l-.194.417-.54-.072A1.876 1.876 0 0 0 5.5 5a2.5 2.5 0 1 0 0 5v1.25a3.75 3.75 0 0 1 0-7.5h.05a5.019 5.019 0 0 1 4.325-2.5c2.3 0 4.182 1.236 4.845 3.125h.02a3.852 3.852 0 0 1 3.868 3.384 3.75 3.75 0 0 1-3.733 4.116h-2.5V17.5h1.875v1.25Z"/></svg> &nbsp This is a &nbsp; <span class="fw-bold"> carbon-neutral </span> &nbsp; delivery</p>
+                                </div>
+                                <button type="button" onclick='AddtoModel(${cart.id})' class="d-flex ms-auto me-auto mt-3 cbtn fw-bold p-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Confirm Order</button>
+                     
+                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                    <div class="modal-content p-3">
+                                        <div class="modal-header">
+                                        <div class="modal-title " id="staticBackdropLabel"> 
+                                            
+                                            <svg class="mb-2 ok" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M21 32.121L13.5 24.6195L15.6195 22.5L21 27.879L32.3775 16.5L34.5 18.6225L21 32.121Z" fill="#1EA575"/>
+                                            <path d="M24 3C19.8466 3 15.7865 4.23163 12.333 6.53914C8.8796 8.84665 6.18798 12.1264 4.59854 15.9636C3.0091 19.8009 2.59323 24.0233 3.40352 28.0969C4.21381 32.1705 6.21386 35.9123 9.15077 38.8492C12.0877 41.7861 15.8295 43.7862 19.9031 44.5965C23.9767 45.4068 28.1991 44.9909 32.0364 43.4015C35.8736 41.812 39.1534 39.1204 41.4609 35.667C43.7684 32.2135 45 28.1534 45 24C45 18.4305 42.7875 13.089 38.8493 9.15076C34.911 5.21249 29.5696 3 24 3ZM24 42C20.4399 42 16.9598 40.9443 13.9997 38.9665C11.0397 36.9886 8.73256 34.1774 7.37018 30.8883C6.0078 27.5992 5.65134 23.98 6.34587 20.4884C7.04041 16.9967 8.75474 13.7894 11.2721 11.2721C13.7894 8.75473 16.9967 7.0404 20.4884 6.34587C23.98 5.65133 27.5992 6.00779 30.8883 7.37017C34.1774 8.73255 36.9886 11.0397 38.9665 13.9997C40.9443 16.9598 42 20.4399 42 24C42 28.7739 40.1036 33.3523 36.7279 36.7279C33.3523 40.1036 28.7739 42 24 42Z" fill="#1EA575"/>
+                                            </svg>
+                                            <h4><span class="mtitle">Order Confirmed</span></h4><p class="order-txt">we hope you enjoy your food </p></div>
+                                        </div>
+                                        <div id='model-body' class="modal-body mbody">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button"  class="d-flex ms-auto me-auto mt-3 cbtn fw-bold p-2" onclick='New()' data-bs-dismiss="modal">Start New Order</button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                    `;
+                }
+                else{
+                    confirm_btn.innerHTML='';
+                }
+                if(cnt===1){
+                    console.log(cnt)
+                    total+=cart.price*cnt;
+                    document.getElementById(t).textContent='$'+total;
+                }
+                });
+        }
+
+
+        var cnt=0;
+        const Count =(id)=>{
+            pcnt++;
+            cnt++;
+            data.map(product=>{
+
+                if(product.id === id)
+                {
+                    var i = 'id'+product.id;
+                    var p = 'pimg'+product.id;
+                    spc = 'spc'+product.id;
+                    var addcart = document.getElementById(i);
+                    addcart.innerHTML='';
+                    addcart.innerHTML=`<div style='border: 3px solid rgb(209, 23, 23);' class="add-to-cart inc">
+                                    <span class="inc1 pt-1"><svg type='button' onclick='Increment(${product.price},${product.id})' xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="none" viewBox="0 0 10 10"><path fill="#fff" d="M10 4.375H5.625V0h-1.25v4.375H0v1.25h4.375V10h1.25V5.625H10v-1.25Z"/></svg></span>  <span id='spc${product.id}'>${cnt}</span>  <span class="dec1 pt-2"><svg type='button' onclick='Decrement(${product.price},${product.id})' xmlns="http://www.w3.org/2000/svg" width="10" height="2" fill="none" viewBox="0 0 10 2"><path fill="#fff" d="M0 .375h10v1.25H0V.375Z"/></svg></span>
+                                    </div>`;
+                    document.getElementById(p).style.border='3px solid rgb(209, 23, 23)';                    
+                }
+                else{
+                    var i = 'id'+product.id;
+                    var addcart = document.getElementById(i);
+                    addcart.innerHTML=` <button onclick='AddtoCart(${product.id})' class="add-to-cart">
+                                            <span class="cart-icon"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" fill="none" viewBox="0 0 21 20"><g fill="#C73B0F" clip-path="url(#a)"><path d="M6.583 18.75a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5ZM15.334 18.75a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5ZM3.446 1.752a.625.625 0 0 0-.613-.502h-2.5V2.5h1.988l2.4 11.998a.625.625 0 0 0 .612.502h11.25v-1.25H5.847l-.5-2.5h11.238a.625.625 0 0 0 .61-.49l1.417-6.385h-1.28L16.083 10H5.096l-1.65-8.248Z"/><path d="M11.584 3.75v-2.5h-1.25v2.5h-2.5V5h2.5v2.5h1.25V5h2.5V3.75h-2.5Z"/></g><defs><clipPath id="a"><path fill="#fff" d="M.333 0h20v20h-20z"/></clipPath></defs></svg></span>&nbsp Add to Cart
+                                        </button>`;
+                }   
+                
+            })
+        }
+
+        const Increment =(price,id)=>{
+
+            cnt+=1;
+            var i=1;
+           data1.map((d)=>{
+            if(i === id)
+            {
+                d.count=cnt;
+            }
+            i++;
+           })
+            console.log(data1)
+            document.getElementById(c).textContent = cnt+'x';
+
+            if(cnt===1)
+            {console.log("if"+cnt)
+               var price1 = price1+(price*cnt);
+            }
+             else{
+                var price1 =0;
+                price1 = price1+(price*cnt);
+                for(var j=1;j<cnt;j++)
+                {
+                    price1=price1-price;
+                }
+                console.log("else"+cnt+price1+total)
+             } 
+            document.getElementById(xprice).textContent ='$'+price*cnt;
+            pcnt+=1;
+            document.getElementById('pcnt').textContent=pcnt;
+            total+=price1;
+            document.getElementById(t).textContent='$'+total;
+            if(mt !== undefined)
+            {
+                console.log(mt)
+                document.getElementById(mt).textContent='$'+total;
+            }
+            document.getElementById(spc).textContent = cnt;
+        }
+
+        const Decrement = (price, id) => {
+                if (cnt > 0) {
+                    cnt -= 1;
+                    data1.forEach((d) => {
+                        if (d.id === id) {
+                            d.count = cnt;
+                        }
+                    });
+                    document.getElementById(c).textContent = cnt + 'x';
+                    document.getElementById(spc).textContent = cnt;
+                    
+                    let price1 = price * cnt;
+                    total -= price;
+
+                    document.getElementById(xprice).textContent = '$' + price1.toFixed(2);
+                    document.getElementById(t).textContent = '$' + total.toFixed(2);
+                    pcnt -= 1;
+                    document.getElementById('pcnt').textContent = pcnt;
+
+                    if (cnt === 0) {
+                        RemoveCart(id,price);
+                    }
+                    if (mt !== undefined) {
+                        document.getElementById(mt).textContent = '$' + total.toFixed(2);
+                    }
+                }
+        }
+
+        const AddtoModel =(id)=>{
+            modelbody = document.querySelector('#model-body');
+            myCart.map((cart)=>{
+                mt = 'total'+id;
+                var count1 = data1[cart.id-1].count;
+                
+                modelbody.innerHTML+=`
+                        <div class='d-flex mb-0 mbody'>
+                            <img class='thumbnail m-2 mb-0' src='${cart.image.thumbnail}'>
+                            <div class='ms-1 mbody'>
+                                <p class='fw-bold mt-1 mb-0'>${cart.name}</p>
+                                <div class='d-flex mt-0 mb-2 mbody'>
+                                    <p id='c${cart.id}' class='fw-bold mt-1'>${count1}x</p>
+                                    <p class='ms-auto mt-1'>@ $${intToFloat(cart.price,2)}</p>
+                                </div>
+                            </div>
+                            <div class='d-flex ms-auto mbody'>
+                                <p id='x${cart.id}' class=''> $${intToFloat(cart.price*count1,2)}</p>
+                            </div>  
+                        </div>
+                        <hr class='m-0 mb-2'/>
+                    ` 
+                } )
+                modelbody.innerHTML+=`<div class='d-flex mbody' >
+                                    <p class='m-1'>Order Total</p>
+                                    <p id='total${id}' class='ms-auto me-1 fw-bold fs-4'>$${total} </p>
+                                </div>`;                       
+        }
+
+       
+
+        function RemoveCart(id, price) {
+            var p = 'pimg'+id;
+        document.getElementById(p).style.border='0px solid rgb(209, 23, 23)';
+        var itemToRemove = myCart.find(cart => cart.id === id);
+        if (!itemToRemove) return;
+
+        var itemCount = data1.find(d => d.id === id).count;
+        total -= price * itemCount;
+        // console.log(total)
+        pcnt -= itemCount;
+
+        myCart = myCart.filter(cart => cart.id !== id);
+        cbody.innerHTML = ''; 
+        myCart.forEach(cart => {
+            var count = data1.find(d => d.id === cart.id).count;
+            cbody.innerHTML += `
+                <div class='p-2'>
+                    <p class='fw-bold'>${cart.category}</p>
+                    <div class='d-flex'>
+                        <p id='c${cart.id}' class='fw-bold'>${count}x</p>
+                        <p class='me-3 ms-3'>@ $${intToFloat(cart.price, 2)}</p>
+                        <p id='xx${cart.id}' class=''> $${intToFloat(cart.price * count, 2)}</p>
+                        <p class='remove pb-2'>
+                            <svg type='button' onclick='RemoveCart(${cart.id}, ${cart.price})' xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="none" viewBox="0 0 10 10">
+                                <path fill="#CAAFA7" d="M8.375 9.375 5 6 1.625 9.375l-1-1L4 5 .625 1.625l1-1L5 4 8.375.625l1 1L6 5l3.375 3.375-1 1Z"/>
+                            </svg>
+                        </p>
+                    </div>
+                    <hr/>
+                </div>
+            `;
+        });
+    
+        // var tid = "total"+id;
+        var tidshow = document.querySelector('.total');
+        // console.log(tid +" "+total)
+        if (tidshow) {
+            tidshow.textContent = `$${intToFloat(total, 2)}`;
+            // console.log(total+' '+tid)
+        }
+        document.getElementById('pcnt').textContent = pcnt;
+        if (pcnt === 0) {
+            cbody.innerHTML = `
+                <img class='CartImg' src="assets/images/illustration-empty-cart.svg">
+                <p class="d-flex justify-content-center empty-cart-txt">Your added items will appear here</p>
+            `;
+            var i = 'id'+id;
+                        var addcart = document.getElementById(i);
+                        addcart.innerHTML=` <button onclick='AddtoCart(${id})' class="add-to-cart">
+                                                <span class="cart-icon"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" fill="none" viewBox="0 0 21 20"><g fill="#C73B0F" clip-path="url(#a)"><path d="M6.583 18.75a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5ZM15.334 18.75a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5ZM3.446 1.752a.625.625 0 0 0-.613-.502h-2.5V2.5h1.988l2.4 11.998a.625.625 0 0 0 .612.502h11.25v-1.25H5.847l-.5-2.5h11.238a.625.625 0 0 0 .61-.49l1.417-6.385h-1.28L16.083 10H5.096l-1.65-8.248Z"/><path d="M11.584 3.75v-2.5h-1.25v2.5h-2.5V5h2.5v2.5h1.25V5h2.5V3.75h-2.5Z"/></g><defs><clipPath id="a"><path fill="#fff" d="M.333 0h20v20h-20z"/></clipPath></defs></svg></span>&nbsp Add to Cart
+                                            </button>`;
+
+            confirm_btn.innerHTML = '';
+        } 
+        var i = 'id'+id;
+                        var addcart = document.getElementById(i);
+                    addcart.innerHTML=` <button onclick='AddtoCart(${id})' class="add-to-cart">
+                                            <span class="cart-icon"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" fill="none" viewBox="0 0 21 20"><g fill="#C73B0F" clip-path="url(#a)"><path d="M6.583 18.75a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5ZM15.334 18.75a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5ZM3.446 1.752a.625.625 0 0 0-.613-.502h-2.5V2.5h1.988l2.4 11.998a.625.625 0 0 0 .612.502h11.25v-1.25H5.847l-.5-2.5h11.238a.625.625 0 0 0 .61-.49l1.417-6.385h-1.28L16.083 10H5.096l-1.65-8.248Z"/><path d="M11.584 3.75v-2.5h-1.25v2.5h-2.5V5h2.5v2.5h1.25V5h2.5V3.75h-2.5Z"/></g><defs><clipPath id="a"><path fill="#fff" d="M.333 0h20v20h-20z"/></clipPath></defs></svg></span>&nbsp Add to Cart
+                                        </button>`;
+       
+            }
+
+
+        const New =()=>{    
+            // ProductRow.innerHTML='';
+            // cbody.innerHTML='';
+            // confirm_btn.innerHTML='';
+            // modelbody.innerHTML='';
+            // myCart=[];
+            // setProducts();
+            // cbody.innerHTML=` <img class='CartImg' src="assets/images/illustration-empty-cart.svg">
+            //                     <p class="d-flex justify-content-center empty-cart-txt">Your added items will appear here</p>`
+            // pcnt=0;
+            // document.getElementById('pcnt').textContent=pcnt;
+            location.reload();
+        }
+
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    </body>
+</html> 
